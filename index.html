@@ -115,22 +115,24 @@ Key points:
     document.addEventListener('DOMContentLoaded', () => {
       let topicKey = null;
 
+      // Check Telegram WebApp start_param
       if (window.Telegram && window.Telegram.WebApp) {
         window.Telegram.WebApp.ready();
-        if (Telegram.WebApp.initDataUnsafe?.start_param) {
-          topicKey = Telegram.WebApp.initDataUnsafe.start_param;
-        }
+        topicKey = window.Telegram.WebApp.initDataUnsafe?.start_param || null;
       }
 
+      // Fallback: Check URL for startapp parameter
       if (!topicKey) {
         const urlParams = new URLSearchParams(window.location.search);
-        topicKey = urlParams.get("topic");
+        topicKey = urlParams.get("startapp");
       }
 
-      if (topicKey) {
+      // Update content based on topicKey
+      if (topicKey && topics[topicKey]) {
         updateContent(topicKey);
       } else {
         document.getElementById("title").textContent = "Welcome to Grade 9 Geometry tutorials _stay with us!";
+        document.getElementById("content").textContent = "";
       }
     });
   </script>
